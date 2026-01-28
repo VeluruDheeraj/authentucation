@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Admin - Books</h2>
+
+<h3>Add Book</h3>
+<form method="post">
+    <input type="text" name="title" placeholder="Book Title" required>
+    <br><br>
+    <input type="text" name="author" placeholder="Author" required>
+    <br><br>
+    <button type="submit">Add Book</button>
+</form>
+
+<hr>
+
+<h3>All Books</h3>
+<ul>
+{% for book in books %}
+    <li>
+        {{ book["title"] }} - {{ book["author"] }}
+        {% if book["available"] == 1 %}
+            (Available)
+        {% else %}
+            (Issued)
+        {% endif %}
+    </li>
+{% endfor %}
+</ul>
+{% endblock %}
