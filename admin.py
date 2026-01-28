@@ -19,6 +19,7 @@ def register_admin_routes(app):
         if request.method == "POST":
             title = request.form["title"]
             author = request.form["author"]
+
             db.execute(
                 "INSERT INTO books (title, author, available) VALUES (?, ?, ?)",
                 (title, author, 1)

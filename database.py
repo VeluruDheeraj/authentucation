@@ -14,19 +14,19 @@ def close_db(e=None):
         db.close()
 
 def init_db():
-    db=sqlite3.connnect(DB)
+    db=sqlite3.connect(DB)
     cur=db.cursor()
     cur.execute("""
         CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT
-            username TEXT ,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT,
             password BLOB,
             role TEXT
         )
     """)
     cur.execute("""
         CREATE TABLE IF NOT EXISTS books (
-            id INTEGER PRIMARY KEY AUTOINCREMENT
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT ,
             author TEXT,
             available INTEGER
@@ -35,7 +35,7 @@ def init_db():
 
     cur.execute("""
         CREATE TABLE IF NOT EXISTS borrowed_books (
-            id INTEGER PRIMARY KEY AUTOINCREMENT
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER,
             book_id INTEGER,
             borrowed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
