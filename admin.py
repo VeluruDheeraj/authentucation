@@ -1,21 +1,30 @@
-from flask import Blueprint,render_template,request,redirect,url_for
+from flask import render_template, request, redirect, session
 from database import get_db
 
-admin_bp=Blueprint("admin",__name__,url_prefix="/admin")
+def register_admin_routes(app):
 
-@admin_bp.route("/books",methods=["GET","POST"])
-def books():
-    db=get_db()
-    if request.method=="POST":
-        title=request.form["title"]
-        author=request.form["author"]
+    @app.route("/admin/dashboard")
+    def admin_dashboard():
+        if session.get("role") != "admin":
+            return redirect("/login")
+        return render_template("admin/dashboard.html")
 
-        db.execute(
-            "INSERT INTO books (title,author,available) VALUES(?,?,?)",(title,author,1)
-        
-        )
-        db.commmit()
-        return redirect(url_for("admin.books"))
-    cur=db.execute("SELECT * FROM BOOKS")
-    books=cur.fetchall()
-    return render_template("admin/books.html",books=books)
+    @app.route("/admin/books", methods=["GET", "POST"])
+    def admin_books():
+        if session.get("role") != "admin":
+            return redirect("/login")
+
+        db = get_db()
+
+        if request.method == "POST":
+            title = request.form["title"]
+            author = request.form["author"]
+            db.execute(
+                "INSERT INTO books (title, author, available) VALUES (?, ?, ?)",
+                (title, author, 1)
+            )
+            db.commit()
+            return redirect("/admin/books")
+
+        books = db.execute("SELECT * FROM books").fetchall()
+        return render_template("admin/books.html", books=books)
